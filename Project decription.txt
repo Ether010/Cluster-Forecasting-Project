@@ -1,0 +1,114 @@
+# Prognozowanie Klastrowe Popytu dla Danych o Wysokiej Zmienności i Sporadyczności (Cluster-Based Demand Forecasting 
+    for Intermittent and High-Variability Data)
+
+## Problem
+
+Prognozowanie popytu na wyroby gotowe stanowi kluczowe wyzwanie dla wielu przedsiębiorstw. 
+    Problem staje się szczególnie złożony w przypadku szerokiego asortymentu produktów (np. setki SKU), 
+    gdzie dane historyczne charakteryzują się:
+
+* **Dużą liczbą obserwacji zerowych** (popyt sporadyczny, ang. *intermittent demand*).
+* **Wysoką zmiennością współczynnika zmienności (CV)**, często przekraczającą 150%.
+
+Tradycyjne metody prognozowania często zawodzą w takich warunkach, prowadząc do niskiej dokładności prognoz i problemów z zarządzaniem zapasami.
+
+## Proponowane Rozwiązanie
+
+Ten projekt eksploruje hybrydową metodologię prognozowania popytu, która łączy techniki klastrowania, prognozowania agregacyjnego oraz dynamicznej dezagregacji w celu poprawy dokładności prognoz dla wyżej opisanych, problematycznych szeregów czasowych.
+
+Główne etapy proponowanej metody to:
+
+1.  **Segmentacja Produktów (Klastrowanie):**
+    * Wykorzystanie analizy **ABC** (klasyfikacja według wartości/wolumenu) oraz **XYZ** (klasyfikacja według zmienności popytu) do podziału produktów na logiczne klastry (np. 9 klastrów: AX, AY, AZ, BX, ..., CZ).
+    * Opcjonalna agregacja danych z poziomu dziennego do tygodniowego w celu redukcji szumu i liczby zer, jeśli to konieczne.
+
+2.  **Prognozowanie na Poziomie Klastra:**
+    * Zsumowanie wartości popytu dla wszystkich produktów w obrębie danego klastra dla każdej jednostki czasu (dnia/tygodnia).
+    * Wygenerowanie prognozy popytu dla każdego z klastrów osobno. Agregacja danych na tym poziomie często prowadzi do bardziej stabilnych i łatwiejszych do prognozowania szeregów czasowych.
+
+3.  **Analiza i Prognozowanie Udziałów Procentowych:**
+    * Zbadanie historycznych zmian udziałów procentowych poszczególnych produktów (SKU) w całkowitym popycie ich macierzystego klastra.
+    * Prognozowanie tych udziałów procentowych w przyszłość, na ten sam horyzont czasowy, co prognoza dla klastra. Pozwala to na dynamiczne uwzględnienie zmian w strukturze popytu wewnątrz klastra.
+
+4.  **Dezagregacja i Prognoza Szczegółowa:**
+    * Połączenie prognozy dla całego klastra z prognozowanymi udziałami procentowymi poszczególnych SKU.
+    * Wynikiem jest prognoza popytu na poziomie indywidualnego artykułu.
+
+5.  **Estymacja Niepewności:**
+    * Wykorzystanie informacji o zmienności zarówno na poziomie prognozy klastra, jak i prognozy udziałów procentowych do określenia przedziałów ufności dla prognoz na poziomie SKU.
+
+## Kluczowe Założenia i Cele
+
+* **Poprawa dokładności prognoz:** Szczególnie dla produktów o sporadycznym i wysoce zmiennym popycie.
+* **Redukcja szumu w danych:** Poprzez agregację na poziomie klastra.
+* **Dynamiczne podejście do dezagregacji:** Prognozowanie udziałów zamiast stosowania stałych, historycznych wartości.
+* **Lepsze zarządzanie zapasami:** Dzięki dokładniejszym prognozom i oszacowaniu ich niepewności.
+* Określenie "widełek" dla prognozy szczegółowej per artykuł dzięki wartościom probabilistycznym.
+
+## Struktura Projektu (Przykładowa)
+
+* `data`: Zanonimizowane dane wejściowe.
+* `src`: Skrypty Python z funkcjami pomocniczymi i główną logiką modelu.
+* `README.md`: Opis projektu.
+* `requirements.txt`: Lista zależności.
+
+## Podsumowanie Koncepcji
+
+Metoda ta opiera się na idei "kompresji" danych poprzez agregację do poziomu klastrów, następnie prognozowaniu tych zagregowanych szeregów, a na końcu "rozwinięciu" (dezagregacji) prognoz z powrotem na poziom poszczególnych produktów, z uwzględnieniem dynamicznie zmieniających się ich udziałów.
+______________________________________________________________________________________________________________________
+
+
+# Cluster-Based Demand Forecasting for Intermittent and High-Variability Data
+
+## Problem
+
+Forecasting demand for finished goods is a key challenge for many businesses. The problem becomes particularly complex with a wide range of products (e.g., hundreds of SKUs) where historical data is characterized by:
+
+* **A large number of zero observations** (intermittent demand).
+* **High variability in the Coefficient of Variation (CV)**, often exceeding 150%.
+
+Traditional forecasting methods often fail under such conditions, leading to low forecast accuracy and inventory management problems.
+
+## Proposed Solution
+
+This project explores a hybrid demand forecasting methodology that combines clustering techniques, aggregate forecasting, and dynamic disaggregation to improve forecast accuracy for the problematic time series described above.
+
+The main stages of the proposed method are:
+
+1.  **Product Segmentation (Clustering):**
+    * Utilization of **ABC analysis** (classification by value/volume) and **XYZ analysis** (classification by demand variability) to divide products into logical clusters (e.g., 9 clusters: AX, AY, AZ, BX, ..., CZ).
+    * Optional aggregation of data from a daily to a weekly level to reduce noise and the number of zeros, if necessary.
+
+2.  **Forecasting at the Cluster Level:**
+    * Summing demand values for all products within a given cluster for each time unit (day/week).
+    * Generating a demand forecast for each cluster separately. Aggregating data at this level often leads to more stable and easier-to-forecast time series.
+
+3.  **Analysis and Forecasting of Percentage Shares:**
+    * Examining the historical changes in the percentage shares of individual products (SKUs) in the total demand of their parent cluster.
+    * Forecasting these percentage shares into the future, for the same time horizon as the cluster forecast. This allows for dynamic consideration of changes in the demand structure within the cluster.
+
+4.  **Disaggregation and Detailed Forecasting:**
+    * Combining the forecast for the entire cluster with the forecasted percentage shares of individual SKUs.
+    * The result is a demand forecast at the individual item level.
+
+5.  **Uncertainty Estimation:**
+    * Using information about variability at both the cluster forecast level and the percentage share forecast level to determine confidence intervals for SKU-level forecasts.
+
+## Key Assumptions and Goals
+
+* **Improved forecast accuracy:** Especially for products with intermittent and highly variable demand.
+* **Noise reduction in data:** Through aggregation at the cluster level.
+* **Dynamic approach to disaggregation:** Forecasting shares instead of using static, historical values.
+* **Better inventory management:** Thanks to more accurate forecasts and an estimation of their uncertainty.
+* Defining "ranges" for detailed forecasts per item using probabilistic values.
+
+## Project Structure (Example)
+
+* `data`: Sample or anonymized input data.
+* `src`: Python scripts with helper functions and the main model logic.
+* `README.md`: Project description.
+* `requirements.txt`: List of dependencies.
+
+## Concept Summary
+
+This method is based on the idea of "compressing" data by aggregating it to the cluster level, then forecasting these aggregated series, and finally "decompressing" (disaggregating) the forecasts back to the individual product level, taking into account their dynamically changing shares.
