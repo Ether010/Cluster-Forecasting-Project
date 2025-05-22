@@ -1,4 +1,5 @@
 import pandas as pd
+import sys
 
 # Load data from Excel file into a DataFrame
 dfRawData = pd.read_excel(r"C:\Users\wiktor.daszynski\Downloads\Python\Cluster Forecasting Project\Data Cluster Forecasting.xlsx")
@@ -18,16 +19,16 @@ dfRawData.rename(columns={
 ## ⬇️ To check and rewiew
 # Population standard deviation of Unit price per Product Code
 unit_price_std = dfRawData.groupby('Product Code')['Unit price'].agg(
-    std_pop=lambda x: x.std(ddof=0)
+    std_pop = lambda x: x.std(ddof=0)
 ).reset_index()
 
 print(unit_price_std)
-# ...existing code...
-⬆️
+
+# ⬆️
 
 ### TODO: Check date of first code sell (min. date when sale >0)
 
-quit()
+sys.exit()
 
 dfRawData['Date of Sale'] = pd.to_datetime(dfRawData['Date of Sale'], format='%Y-%m-%d')
 
