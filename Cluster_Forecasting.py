@@ -16,18 +16,21 @@ dfRawData.rename(columns={
 
 ### TODO: check price standard deviation per Product code
 
-## ⬇️ To check and rewiew
-# Population standard deviation of Unit price per Product Code
 unit_price_std = dfRawData.groupby('Product Code')['Unit price'].agg(
     std_pop = lambda x: x.std(ddof=0)
 ).reset_index()
 
-print(unit_price_std)
 
-# ⬆️
 
-### TODO: Check date of first code sell (min. date when sale >0)
+# ⬆️ wziac ostatnią cenę jednostkową z daty sprzedaży
 
+# Check date of first code sell (min. date when sale >0)
+min_date = dfRawData.groupby('Product Code')['Date of Sale'].min().reset_index()
+
+min_date["Days since 2024.01.01"] = (min_date["Date of Sale"] - pd.to_datetime("2024-01-01")).dt.days
+
+print(min_date)
+# quit to be deleted when the code is ready
 sys.exit()
 
 dfRawData['Date of Sale'] = pd.to_datetime(dfRawData['Date of Sale'], format='%Y-%m-%d')
