@@ -112,3 +112,11 @@ The main stages of the proposed method are:
 ## Concept Summary
 
 This method is based on the idea of "compressing" data by aggregating it to the cluster level, then forecasting these aggregated series, and finally "decompressing" (disaggregating) the forecasts back to the individual product level, taking into account their dynamically changing shares.
+______________________________________________________________________________________________________________________
+
+Cluster Forecasting Project/
+│
+├── Cluster_Forecasting.py      # main code 
+├── DataSideAnalysys.ipynb                   # side checks, analysys, charts
+├── project decription.txt      
+└── data/                       # Raw data
