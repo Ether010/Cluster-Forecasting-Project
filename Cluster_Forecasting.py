@@ -19,26 +19,42 @@ dfRawData.rename(columns={
 
 dfRawData['Date of Sale'] = pd.to_datetime(dfRawData['Date of Sale'], format='%Y-%m-%d')
 
-sale_date_range = pd.date_range(
-    start = "2024.01.01",
-    end = "2025.01.05",
-    freq = "D")
-workdays = sale_date_range[sale_date_range.weekday < 6]
-products = dfRawData['Product Code'].unique()
+# Find minimum sale date for each product
+min_dates = dfRawData.groupby('Product Code')['Date of Sale'].min()
 
-# full date and unique product code df
-dfFDP = pd.MultiIndex.from_product(
-    [workdays, products],
-    names=['Date of Sale', 'Product Code']
-).to_frame(index=False)
+# Prepare the final list to collect metrics
+metrics = []
 
-dfMerged = pd.merge(
-    dfFDP,
-    dfRawData,
-    how='left',
-    on=['Date of Sale', 'Product Code'])
-dfMerged["Quantity"] = dfMerged["Quantity"].fillna(0)
+# Set the last date for expansion
+last_date = pd.to_datetime("2025-05-01")
 
-### TODO: fill empty cuolumns Name, Unit price, with previous table data -> then calculate Value Q*Price = value
+# Process each product separately
+for code, min_date in min_dates.items():
+    # Filter only this product
+    df_code = dfRawData[dfRawData['Product Code'] == code][['Date of Sale', 'Quantity']].copy()
+    # Create full date range for this product
+    date_range = pd.date_range(start=min_date, end=last_date, freq='D')
+    # Merge with full date range, fill missing Quantity with 0
+    df_full = pd.DataFrame({'Date of Sale': date_range})
+    df_full = df_full.merge(df_code, on='Date of Sale', how='left').fillna({'Quantity': 0})
+    # Calculate metrics
+    avg = df_full['Quantity'].mean()
+    std = df_full['Quantity'].std(ddof=0)
+    cv = round((std / avg * 100), 2) if avg != 0 else np.nan
+    metrics.append({'Product Code': code, 'Average': avg, 'StdDev': std, 'CV (%)': cv})
 
-print(dfMerged.head(10))
+# Combine all metrics into a DataFrame
+dfMetrics = pd.DataFrame(metrics)
+
+# Assign XYZ classes based on CV (%) thresholds
+def xyz_class(cv):
+    if cv <= 50:
+        return 'X'
+    elif 50 < cv <= 100:
+        return 'Y'
+    else:
+        return 'Z'
+
+dfMetrics['XYZ'] = dfMetrics['CV (%)'].apply(xyz_class)
+print(dfMetrics[['Product Code', 'CV (%)', 'XYZ']])
+

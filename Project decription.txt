@@ -136,3 +136,7 @@ In this notebook, I explored two key aspects of the dataset that will impact the
    For periods with no sales (from the first sale date to 01.05.2025), I will fill missing data with zeros. This ensures that the calculated metrics reflect both active and inactive periods for each product.
 
 These findings will shape the approach and methodology for the main forecasting and clustering pipeline.
+
+
+
+CV to high in daily time series, agregate to weekly
