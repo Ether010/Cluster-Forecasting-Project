@@ -17,43 +17,6 @@ dfRawData.rename(columns={
     "Ilość": "Quantity"
     }, inplace=True)
 
-### TODO: check price standard deviation per Product code
-
-unit_price_std = dfRawData.groupby('Product Code')['Unit price'].agg(
-    std_pop = lambda x: x.std(ddof=0)
-).reset_index()
-
-# ⬆️ wziac ostatnią cenę jednostkową z daty sprzedaży
-
-# Check date of first code sell (min. date when sale >0)
-min_date = dfRawData.groupby('Product Code')['Date of Sale'].min().reset_index()
-min_date["Days since 2024.01.01"] = (min_date["Date of Sale"] - pd.to_datetime("2024-01-01")).dt.days
-
-plt.figure(figsize=(10, 6))
-plt.hist(min_date["Days since 2024.01.01"], bins=20, color='blue', alpha=0.7, edgecolor='black')
-plt.xlabel('Days since 2024.01.01')
-plt.ylabel("Product count")
-plt.grid(axis = "y")
-
-plt.figure(figsize=(10, 6))
-plt.scatter(min_date["Product Code"], min_date["Days since 2024.01.01"], color='red', alpha=0.7)
-plt.ylabel('Days since 2024.01.01')
-plt.xlabel("Product Code")
-plt.xticks(rotation=90)
-plt.tight_layout()
-
-mean_val = min_date["Days since 2024.01.01"].mean()
-plt.axhline(mean_val, color='red', linestyle='--', label='Mean')
-
-median_val = min_date["Days since 2024.01.01"].median()
-plt.axhline(median_val, color='green', linestyle='--', label='Median')
-
-plt.legend()
-plt.show()
-
-# ⚠️ quit to be deleted when the code is ready
-sys.exit()
-
 dfRawData['Date of Sale'] = pd.to_datetime(dfRawData['Date of Sale'], format='%Y-%m-%d')
 
 sale_date_range = pd.date_range(

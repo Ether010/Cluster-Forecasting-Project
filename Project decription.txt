@@ -117,6 +117,22 @@ ________________________________________________________________________________
 Cluster Forecasting Project/
 │
 ├── Cluster_Forecasting.py      # main code 
-├── DataSideAnalysys.ipynb                   # side checks, analysys, charts
+├── DataSideAnalysys.ipynb      # side checks, analysys, charts
 ├── project decription.txt      
 └── data/                       # Raw data
+
+## Side Data Exploration Summary
+
+In this notebook, I explored two key aspects of the dataset that will impact the main ABC/XYZ analysis:
+
+1. **Unit Price Variability:**  
+   I analyzed the standard deviation of unit prices per product code. The results show significant price differences over time for some products. This complicates the ABC/XYZ analysis, as using a single price for all periods would be misleading. To address this, I will use the "current" (i.e., last available) price to evaluate the entire time series for each product.
+
+2. **Sales Start Dates:**  
+   I investigated the time period of sales for each product. The analysis and plots reveal that not all items were introduced on 01.01.2024; in fact, many products appeared much later. This means that ABC/XYZ metrics (average and standard deviation) must be calculated for each product's individual time series, not over a fixed global period.
+
+### Main Cluster Forecasting Project
+1. **Zero-Filling for Non-Sale Periods:**  
+   For periods with no sales (from the first sale date to 01.05.2025), I will fill missing data with zeros. This ensures that the calculated metrics reflect both active and inactive periods for each product.
+
+These findings will shape the approach and methodology for the main forecasting and clustering pipeline.
