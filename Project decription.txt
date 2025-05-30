@@ -137,3 +137,6 @@ In this notebook, I explored two key aspects of the dataset that will impact the
 
 These findings will shape the approach and methodology for the main forecasting and clustering pipeline.
 Additionally there will be data visualisation with mat.plot.lib
+
+To Be added exploration in custom clustering direction, k-means, etc.
+
