@@ -52,7 +52,7 @@ Główne etapy proponowanej metody to:
 * `README.md`: Opis projektu.
 * `requirements.txt`: Lista zależności.
 
-## Podsumowanie Koncepcji
+## Podsumowanie
 
 Metoda ta opiera się na idei "kompresji" danych poprzez agregację do poziomu klastrów, następnie prognozowaniu tych zagregowanych szeregów, a na końcu "rozwinięciu" (dezagregacji) prognoz z powrotem na poziom poszczególnych produktów, z uwzględnieniem dynamicznie zmieniających się ich udziałów.
 ______________________________________________________________________________________________________________________
