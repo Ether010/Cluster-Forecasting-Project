@@ -8,7 +8,7 @@ Prognozowanie popytu na wyroby gotowe stanowi kluczowe wyzwanie dla wielu przeds
     gdzie dane historyczne charakteryzują się:
 
 * **Dużą liczbą obserwacji zerowych** (popyt sporadyczny, ang. *intermittent demand*).
-* **Wysoką zmiennością współczynnika zmienności (CV)**, często przekraczającą 150%.
+* **Wysoką zmiennością współczynnika zmienności (V)**, często przekraczającą 150%.
 
 Tradycyjne metody prognozowania często zawodzą w takich warunkach, prowadząc do niskiej dokładności prognoz i problemów z zarządzaniem zapasami.
 
